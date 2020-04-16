@@ -55,41 +55,60 @@
         </div>
     </div>
 
+    <!--引入Http.js文集 -->
+    <script src="./libs/http.js"></script>
     <script>
         //入口函数
-        $(function(){
+        $(function () {
             //一进到后台首页，就应该获取登录的管理员个人信息，显示在页面上。
             //用原生jS发送ajax请求如何把token带过去
-           /*  var xhr = new XMLHttpRequest();
-            xhr.open('get','http://localhost:8080/api/v1/admin/user/info');
-            xhr.setRequestHeader('Authorization',localStorage.getItem('token'));//设置请求头
-            xhr.onload = function(){
-                console.log(xhr.response);
-            }
-            xhr.send(); */
+            /*  var xhr = new XMLHttpRequest();
+             xhr.open('get','http://localhost:8080/api/v1/admin/user/info');
+             xhr.setRequestHeader('Authorization',localStorage.getItem('token'));//设置请求头
+             xhr.onload = function(){
+                 console.log(xhr.response);
+             }
+             xhr.send(); */
             //一进到后台首页，就应该获取登录的管理员个人信息，显示在页面上。
 
             //jquery发送ajax请求如何把令牌带过去呢
 
             //1.1 发送ajax请求，获取个人信息
             $.ajax({
-                type:'get',
-                url:'http://localhost:8080/api/v1/admin/user/info',
+                type: 'get',
+                // url: 'http://localhost:8080/api/v1/admin/user/info',
+                url:BigNew.user_info,//使用的是http.js里面的接口
                 //设置请求头（键值）
-                headers:{
-                    'Authorization':localStorage.getItem('token')
+                headers: {
+                    'Authorization': localStorage.getItem('token')
                 },
-                success:function(backData){
+                success: function (backData) {
                     console.log(backData);
-                     //1.2 个人信息显示在页面上
-            if(backData.code==200){
-                $('.user_info>span>i').text(backData.data.nickname);
-                $('.user_info>img').attr('src',backData.data.userPic);
-                $('.user_center_link>img').attr('src',backData.data.userPic);
-            }
+                    //1.2 个人信息显示在页面上
+                    if (backData.code == 200) {
+                        $('.user_info>span>i').text(backData.data.nickname);
+                        $('.user_info>img').attr('src', backData.data.userPic);
+                        $('.user_center_link>img').attr('src', backData.data.userPic);
+                    }
                 }
             });
+            //二：登出系统
+            //2.1给登出系统设置一个点击事件 
+            $('.logout').on('click',function(e){
+                //阻止a标签的默认跳转
+                e.preventDefault();
+                if((confirm('你确定要退出吗'))){
+                   //删除token
+                   localStorage.removeItem('token');
+                   //跳转到登陆页面
+                   window.location.href='./login.html' 
+                }
+            })
         })
+        
+        
+        
     </script>
 </body>
+
 </html>
